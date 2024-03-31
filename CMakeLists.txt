@@ -4,11 +4,11 @@ set(SRC_PATH "./src")
 
 project(MAIN)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Core REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SRC_PATH}/main.cpp)
 add_subdirectory(lib)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets Qt5::Core)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib)
 target_link_libraries(${PROJECT_NAME} PRIVATE mylib)

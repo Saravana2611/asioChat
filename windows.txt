@@ -1,0 +1,14 @@
+1) install mingw
+2) add mingw/ucrt/bin path to env variables
+3) install cmake
+4) add path to env variables
+5) Download qt6 offline installer
+6) configure -prefix %CD%\qtbase
+7) cmake --build .
+8) Add set(CMAKE_PREFIX_PATH "D:/saravanan/proj/qt-everywhere-src-6.6.3/Qtbase") in main CMakeLists.txt
+
+9) set(CMAKE_PREFIX_PATH "D:/saravanan/proj/qt-everywhere-src-6.6.3/Qtbase")
+10) cmake -S . -B build/ -G "MinGW Makefiles"
+11) mingw32-make -C build
+12) D:\saravanan\proj\qt-everywhere-src-6.6.3\qtbase\bin\windeployqt.exe ./build
+13) Open ./build/MAIN.exe Enjoy!

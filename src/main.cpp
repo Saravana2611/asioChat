@@ -1,29 +1,32 @@
 #include <iostream>
 #include "mylib.hpp"
+#include "TextField.hpp"
+#include "PushButton.hpp"
 
 #include <QApplication>
-#include <QPushButton>
+#include <QWidget>
+#include <QGridLayout>
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv); // Create the Qt application object
+    QWidget mainWindow;
 
-    QPushButton button("Click me!"); // Create a QPushButton widget
-    button.resize(100, 30); // Set the size of the button
-    button.show(); // Display the button
+    auto *grid = new QGridLayout(&mainWindow);
 
-    cout << mylib::add(10, 2) << endl;
+    TextField window("Input Field:");
+    Button submitButton("Submit");
 
-    cout << mylib::add(10, 2) << endl;
-    cout << mylib::sub(10, 2) << endl;
-    cout << mylib::mul(10, 2) << endl;
-    cout << mylib::div(10, 2) << endl;
+    grid->addWidget(window.label, 0, 0);
+    grid->addWidget(window.inputField, 0, 1);
 
-    cout << mylib::add(1.0, 2.5) << endl;
-    cout << mylib::sub(1.0, 2.5) << endl;
-    cout << mylib::mul(1.0, 2.5) << endl;
-    cout << mylib::div(1.0, 2.5) << endl;
-    
+    QObject::connect(submitButton.button, &QPushButton::clicked, [](){std::cout<<"HELLO";});
+    grid->addWidget(submitButton.button, 1, 1, Qt::AlignRight);
+
+    mainWindow.resize(250, 150);
+    mainWindow.setWindowTitle("Simple App");
+    mainWindow.show();
+
     return app.exec(); // Enter the Qt event loop
 }
