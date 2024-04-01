@@ -1,7 +1,8 @@
 #include <iostream>
+
 #include "mylib.hpp"
-#include "TextField.hpp"
-#include "PushButton.hpp"
+#include "qt/TextField.hpp"
+#include "qt/PushButton.hpp"
 
 #include <QApplication>
 #include <QWidget>
@@ -9,21 +10,24 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QApplication app(argc, argv); // Create the Qt application object
     QWidget mainWindow;
 
     auto *grid = new QGridLayout(&mainWindow);
 
-    TextField window("Input Field:");
+    TextField textField("Input Field:");
     Button submitButton("Submit");
 
-    grid->addWidget(window.label, 0, 0);
-    grid->addWidget(window.inputField, 0, 1);
+    grid->addWidget(textField.getQLabel(), 0, 0);
+    grid->addWidget(textField.getQLineEdit(), 0, 1);
 
-    QObject::connect(submitButton.button, &QPushButton::clicked, [](){std::cout<<"HELLO";});
-    grid->addWidget(submitButton.button, 1, 1, Qt::AlignRight);
+    grid->addWidget(submitButton.getButton(), 1, 1, Qt::AlignRight);
 
+    QObject::connect(submitButton.getButton(), &QPushButton::clicked, [&textField]()
+                     { std::cout << textField.getInputFieldInStr();});
+                     
     mainWindow.resize(250, 150);
     mainWindow.setWindowTitle("Simple App");
     mainWindow.show();

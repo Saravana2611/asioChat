@@ -6,10 +6,12 @@
 
 class TextField : public QWidget
 {
-
-public:
     QLabel *label;
     QLineEdit *inputField;
+public:
     TextField(QWidget *parent = nullptr);
     TextField(std::string labelStr, QWidget *parent = nullptr);
+    QLineEdit* getQLineEdit();
+    QLabel* getQLabel();
+    std::string getInputFieldInStr();
 };

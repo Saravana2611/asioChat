@@ -13,3 +13,8 @@ Button::Button(std::string buttonLabel, QWidget *parent)
     button = new QPushButton(QString::fromStdString(buttonLabel), this);
     button->setFixedSize(100,30);
 }
+
+QPushButton* Button::getButton()
+{
+    return button;
+}

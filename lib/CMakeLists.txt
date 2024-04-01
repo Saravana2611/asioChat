@@ -1,6 +1,8 @@
-find_package(Qt5 COMPONENTS Widgets Core REQUIRED)
 
-add_library(mylib STATIC mylib.cpp TextField.cpp PushButton.cpp)
+add_library(mylib STATIC mylib.cpp)
 
-target_link_libraries(mylib PRIVATE Qt5::Widgets Qt5::Core)
+add_subdirectory(qt)
+add_subdirectory(asio)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE myQt myAsio)
 target_include_directories(mylib PUBLIC ${CMAKE_SOURCE_DIR}/lib)

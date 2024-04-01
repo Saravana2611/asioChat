@@ -5,9 +5,9 @@
 
 class Button : public QWidget
 {
-
-public:
     QPushButton *button;
+public:
     Button(QWidget *parent = nullptr);
     Button(std::string buttonLabel, QWidget *parent = nullptr);
+    QPushButton* getButton();
 };
