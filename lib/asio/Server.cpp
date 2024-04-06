@@ -1,40 +1,25 @@
+#include <Server.hpp>
 #include <iostream>
 
-// void handle_client(boost::asio::ip::tcp::socket& socket) {
-//     boost::asio::streambuf buffer;
-//     boost::system::error_code error;
+Server::Server(boost::asio::io_context &io_context,
+               const boost::asio::ip::tcp::endpoint &endpoint) : io_context_(io_context),
+                                                                 acceptor_(io_context, endpoint), socket_(io_context_)
+{
+    std::cout << "CREATED SERVER\n";
+    start_accept();
+}
 
-//     // Read data from the client
-//     boost::asio::read_until(socket, buffer, '\n', error);
-//     if (error) {
-//         std::cerr << "Error reading data: " << error.message() << std::endl;
-//         return;
-//     }
+void Server::start_accept() //New connection
+{
+    acceptor_.async_accept(socket_, std::bind(&Server::accept_handler, this, std::placeholders::_1));
+}
 
-//     // Echo the data back to the client
-//     std::string message = boost::asio::buffer_cast<const char*>(buffer.data());
-//     boost::asio::write(socket, boost::asio::buffer(message), error);
-//     if (error) {
-//         std::cerr << "Error writing data: " << error.message() << std::endl;
-//     }
-// }
-
-// int main() {
-//     boost::asio::io_context io_context;
-//     boost::asio::ip::tcp::acceptor acceptor(io_context,
-//         boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 8888));
-
-//     std::cout << "TCP Echo Server started. Listening on port 8888." << std::endl;
-
-//     while (true) {
-//         boost::asio::ip::tcp::socket socket(io_context);
-//         acceptor.accept(socket);
-
-//         std::cout << "New connection from: " << socket.remote_endpoint() << std::endl;
-
-//         // Handle the client in a separate thread
-//         std::thread(handle_client, std::ref(socket)).detach();
-//     }
-
-//     return 0;
-// }
+void Server::accept_handler(const boost::system::error_code &error)
+{
+    if (!error)
+    {
+        std::cout << "Connection Succeded\n";
+        // Do something read/write
+    }
+    start_accept(); //recursively wait for new connection
+}

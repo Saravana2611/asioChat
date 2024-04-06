@@ -3,12 +3,16 @@
 #include "mylib.hpp"
 #include "qt/TextField.hpp"
 #include "qt/PushButton.hpp"
+#include "asio/Server.hpp"
+#include "asio/Client.hpp"
 
 #include <QApplication>
 #include <QWidget>
 #include <QGridLayout>
 
 using namespace std;
+
+
 
 int main(int argc, char *argv[])
 {
@@ -26,11 +30,36 @@ int main(int argc, char *argv[])
     grid->addWidget(submitButton.getButton(), 1, 1, Qt::AlignRight);
 
     QObject::connect(submitButton.getButton(), &QPushButton::clicked, [&textField]()
-                     { std::cout << textField.getInputFieldInStr();});
-                     
+                     { std::cout << textField.getInputFieldInStr() << "\n"; });
+
     mainWindow.resize(250, 150);
     mainWindow.setWindowTitle("Simple App");
     mainWindow.show();
 
-    return app.exec(); // Enter the Qt event loop
+    try
+    {
+        boost::asio::io_context io_context;
+        boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 12345);
+        Server server(io_context, endpoint);
+        Client client(io_context, endpoint);
+        // io_context.run();
+
+        
+        boost::asio::io_context::work work(io_context);
+
+        std::thread io_thread([&io_context]()
+                              { io_context.run(); });
+
+        int result = app.exec(); // Enter the Qt event loop
+
+        // Clean up
+        io_context.stop();
+        io_thread.join();
+
+        return result;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
