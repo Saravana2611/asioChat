@@ -1,5 +1,6 @@
 #include <Client.hpp>
 #include <iostream>
+#include <cstring>
 
 Client::Client(boost::asio::io_context &io_context,
                const boost::asio::ip::tcp::endpoint &endpoint) : io_context_(io_context), endpoint_(endpoint),
@@ -16,7 +17,10 @@ void Client::start_client()
     {
         socket_.connect(endpoint_);
         std::cout << "Connected to server\n";
+        std::strncpy(data_, "Hello World\n", max_length_);
 
+        boost::asio::write(socket_, boost::asio::buffer(data_, max_length_));
+        std::cout << "Data Sent\n";
         // Do something with the connected socket, e.g., send/receive data
     }
     catch (const std::exception &e)

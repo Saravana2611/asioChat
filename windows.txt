@@ -12,3 +12,12 @@
 11) mingw32-make -C build
 12) D:\saravanan\proj\qt-everywhere-src-6.6.3\qtbase\bin\windeployqt.exe ./build
 13) Open ./build/MAIN.exe Enjoy!
+
+==============================================================================================================================
+
+Boost ASIO tcp connection
+1) create io_context
+2) Create endpoint
+3) Create socket
+4) async_accept() wait for new connection
+5) async_read() Once connection successful read data from buffer

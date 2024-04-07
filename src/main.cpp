@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "mylib.hpp"
+#include "AppManager.hpp"
 #include "qt/TextField.hpp"
 #include "qt/PushButton.hpp"
 #include "asio/Server.hpp"
@@ -11,8 +11,6 @@
 #include <QGridLayout>
 
 using namespace std;
-
-
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +32,7 @@ int main(int argc, char *argv[])
 
     mainWindow.resize(250, 150);
     mainWindow.setWindowTitle("Simple App");
-    mainWindow.show();
+    // mainWindow.show();
 
     try
     {
@@ -42,21 +40,20 @@ int main(int argc, char *argv[])
         boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 12345);
         Server server(io_context, endpoint);
         Client client(io_context, endpoint);
-        // io_context.run();
+        io_context.run();
 
-        
-        boost::asio::io_context::work work(io_context);
+        // boost::asio::io_context::work work(io_context);
 
-        std::thread io_thread([&io_context]()
-                              { io_context.run(); });
+        // std::thread io_thread([&io_context]()
+        //                       { io_context.run(); });
 
-        int result = app.exec(); // Enter the Qt event loop
+        // int result = app.exec(); // Enter the Qt event loop
 
-        // Clean up
-        io_context.stop();
-        io_thread.join();
+        // // Clean up
+        // io_context.stop();
+        // io_thread.join();
 
-        return result;
+        // return result;
     }
     catch (const std::exception &e)
     {

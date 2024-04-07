@@ -1,5 +1,5 @@
 
-add_library(mylib STATIC mylib.cpp)
+add_library(mylib STATIC AppManager.cpp)
 
 add_subdirectory(qt)
 add_subdirectory(asio)
