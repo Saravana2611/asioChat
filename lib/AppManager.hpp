@@ -1,29 +1,15 @@
 #pragma once
-#include <iostream>
-#include <string>
 
-/**
- * The Mediator interface declares a method used by components to notify the
- * mediator about various events. The Mediator may react to these events and
- * pass the execution to other components.
- */
-class BaseComponent;
-class Mediator
-{
-public:
-    virtual void Notify(BaseComponent *sender, std::string event) const = 0;
-};
+#include "mediator.hpp"
+#include "asio/Server.hpp"
+#include "asio/Client.hpp"
 
-/**
- * The Base Component provides the basic functionality of storing a mediator's
- * instance inside component objects.
- */
-
-class BaseComponent
-{
-    Mediator *mediator_;
+class AppManager : public Mediator {
+private:
+    Server *component1_;
+    Client *component2_;
 
 public:
-    BaseComponent(Mediator *mediator = nullptr);
-    void set_mediator(Mediator *mediator);
+    AppManager(Server *c1, Client *c2);
+    void Notify(BaseComponent *sender, const std::string &event) const override;
 };

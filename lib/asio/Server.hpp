@@ -1,6 +1,6 @@
 #pragma once
 #include <boost/asio.hpp>
-#include "../AppManager.hpp"
+#include "../BaseComponent.hpp"
 
 class Server : public BaseComponent
 {

@@ -1,7 +1,8 @@
 #pragma once
 #include <boost/asio.hpp>
+#include "../BaseComponent.hpp"
 
-class Client
+class Client : public BaseComponent
 {
     boost::asio::io_context &io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;
