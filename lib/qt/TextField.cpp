@@ -18,12 +18,12 @@ TextField::TextField(std::string labelStr, QWidget *parent)
     inputField = new QLineEdit(this);
 }
 
-QLineEdit* TextField::getQLineEdit()
+QLineEdit *TextField::getQLineEdit()
 {
     return inputField;
 }
 
-QLabel* TextField::getQLabel()
+QLabel *TextField::getQLabel()
 {
     return label;
 }

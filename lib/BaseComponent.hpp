@@ -1,4 +1,5 @@
 #pragma once
+#include "mediator.hpp"
 
 class Mediator; // Forward declaration
 
