@@ -17,4 +17,5 @@ public:
     void accept_handler(const boost::system::error_code &error);
     void handle_connection();
     void read_callback(const boost::system::error_code &error, std::size_t length);
+    void sendToClient(const std::string message);
 };

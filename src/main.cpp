@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 12345);
     Server server(io_context, endpoint);
     Client client(io_context, endpoint);
-    AppManager *mediator = new AppManager(&server, &client);
+    AppManager *mediator = new AppManager(&qtApp, &server);
     // io_context.run();
 
     boost::asio::io_context::work work(io_context);

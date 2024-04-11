@@ -15,4 +15,6 @@ public:
     Client(boost::asio::io_context &io_context,
            const boost::asio::ip::tcp::endpoint &endpoint);
     void start_client();
+    void handle_connection();
+    void read_callback(const boost::system::error_code &error, std::size_t length);
 };

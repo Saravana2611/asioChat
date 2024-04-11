@@ -41,3 +41,10 @@ void Server::read_callback(const boost::system::error_code &error, std::size_t l
         Server::handle_connection();
     }
 }
+
+void Server::sendToClient(const std::string message)
+{
+    std::strncpy(data_, message.c_str(), max_length_);
+
+    boost::asio::write(socket_, boost::asio::buffer(data_, max_length_));
+}
