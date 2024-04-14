@@ -15,22 +15,31 @@ void Client::start_client()
 {
     try
     {
-        socket_.connect(endpoint_);
-        std::cout << "Connected to server\n";
-
-        handle_connection();
+        std::cout << "Connecting to Server...\n";
+        // socket_.connect(endpoint_);
+        auto socket_ptr = std::make_shared<boost::asio::ip::tcp::socket>(io_context_);
+        (socket_ptr)->connect(endpoint_);
+        std::cout<<"Connected\n";
+        handle_connection(socket_ptr);
     }
     catch (const std::exception &e)
     {
         std::cerr << "Connection failed: " << e.what() << std::endl;
     }
 }
-void Client::handle_connection()
+void Client::handle_connection(std::shared_ptr<boost::asio::ip::tcp::socket> socket)
 {
-    boost::asio::async_read(socket_, boost::asio::buffer(data_, max_length_), std::bind(&Client::read_callback, this, std::placeholders::_1, std::placeholders::_2));
+    std::string message = "Hello Worasdfffffffffdasdsdasdasdasld";
+
+    // boost::asio::async_write(*socket, boost::asio::buffer(message), std::bind(&Client::read_callback, this, socket,std::placeholders::_1, std::placeholders::_2));
+    // socket->write_some(boost::asio::buffer(message));
+    std::cout << message;
+    boost::asio::write(*socket, boost::asio::buffer(message));
+    std::cout << "Data Sent\n";
+    // boost::asio::async_read(*socket, boost::asio::buffer(data_, max_length_), std::bind(&Client::read_callback, this, socket,  std::placeholders::_1, std::placeholders::_2));
 }
 
-void Client::read_callback(const boost::system::error_code &error, std::size_t length)
+void Client::read_callback(std::shared_ptr<boost::asio::ip::tcp::socket> socket, const boost::system::error_code &error, std::size_t length)
 {
     if (!error)
     {
@@ -38,6 +47,15 @@ void Client::read_callback(const boost::system::error_code &error, std::size_t l
         // Do something with the received data
 
         // Continue reading more data recursively
-        Client::handle_connection();
     }
+    else
+    {
+        std::cout << "Error during async_read"  << error.message() << std::endl;
+    }
+            handle_connection(socket);
+}
+
+Client::~Client()
+{
+    std::cout<<"Client destroyed\n";
 }

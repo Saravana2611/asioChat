@@ -14,7 +14,8 @@ class Client : public BaseComponent
 public:
     Client(boost::asio::io_context &io_context,
            const boost::asio::ip::tcp::endpoint &endpoint);
+    ~Client();
     void start_client();
-    void handle_connection();
-    void read_callback(const boost::system::error_code &error, std::size_t length);
+    void handle_connection(std::shared_ptr<boost::asio::ip::tcp::socket> socket);
+    void read_callback(std::shared_ptr<boost::asio::ip::tcp::socket> socket, const boost::system::error_code &error, std::size_t length);
 };
