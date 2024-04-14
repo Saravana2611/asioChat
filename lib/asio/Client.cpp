@@ -1,5 +1,6 @@
 #include <Client.hpp>
 #include <iostream>
+#include <thread>
 #include <cstring>
 
 Client::Client(boost::asio::io_context &io_context,
@@ -29,10 +30,15 @@ void Client::start_client()
 }
 void Client::handle_connection(std::shared_ptr<boost::asio::ip::tcp::socket> socket)
 {
-    std::string message = "Hello Worasdfffffffffdasdsdasdasdasld";
+    std::string message = "Hello world 1";
 
     // boost::asio::async_write(*socket, boost::asio::buffer(message), std::bind(&Client::read_callback, this, socket,std::placeholders::_1, std::placeholders::_2));
     // socket->write_some(boost::asio::buffer(message));
+    std::cout << message;
+    boost::asio::write(*socket, boost::asio::buffer(message));
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    
+    message = "Hello world 2";
     std::cout << message;
     boost::asio::write(*socket, boost::asio::buffer(message));
     std::cout << "Data Sent\n";

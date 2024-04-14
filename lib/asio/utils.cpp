@@ -20,21 +20,10 @@ bool isServerRunning(boost::asio::io_context &io_context, boost::asio::ip::tcp::
     try
     {
         socket_ptr->connect(endpoint);
-        if (socket_ptr->is_open())
-            std::cout << " OPEN\n";
         std::cout << "Connect is success\n";
-        // boost::asio::write(*socket_ptr, boost::asio::buffer("HELLO"));
-        boost::asio::async_write(*socket_ptr, boost::asio::buffer("HELLO"),
+        boost::asio::async_write(*socket_ptr, boost::asio::buffer("Server is running"),
                                  std::bind(write_handler, std::placeholders::_1, std::placeholders::_2));
-        if (socket_ptr->is_open())
-            std::cout << " OPEN\n";
-        std::this_thread::sleep_for(std::chrono::seconds(4));
-        boost::asio::write(*socket_ptr, boost::asio::buffer("World"));
-        if (socket_ptr->is_open())
-            std::cout << " OPEN\n";
-            
         socket_ptr->close();
-        std::cout << " CLOSED OPEN\n";
         return true; // Connection succeeded, server is running
     }
     catch (boost::system::system_error &e)

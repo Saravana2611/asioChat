@@ -12,10 +12,10 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    // QApplication app(argc, argv); // Create the Qt application object
+    QApplication app(argc, argv); // Create the Qt application object
 
-    // QtApp qtApp;
-    // qtApp.show();
+    QtApp qtApp;
+    qtApp.show();
 
     boost::asio::io_context io_context;
     boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 12345);
@@ -35,22 +35,22 @@ int main(int argc, char *argv[])
         client = new Client(io_context, endpoint);
     }
 
-    io_context.run();
+    // io_context.run();
 
-    // AppManager *mediator = new AppManager(&qtApp, server);
-    // boost::asio::io_context::work work(io_context);
+    AppManager *mediator = new AppManager(&qtApp, server);
+    boost::asio::io_context::work work(io_context);
 
-    // std::thread io_thread([&io_context]()
-    //                       { io_context.run(); });
+    std::thread io_thread([&io_context]()
+                          { io_context.run(); });
 
-    // int result = app.exec(); // Enter the Qt event loop
+    int result = app.exec(); // Enter the Qt event loop
 
     // Clean up
-    // io_context.stop();
-    // io_thread.join();
+    io_context.stop();
+    io_thread.join();
 
     delete server;
     delete client;
 
-    // return result;
+    return result;
 }
