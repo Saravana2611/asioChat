@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv); // Create the Qt application object
 
     QtApp qtApp;
-    qtApp.show();
 
     boost::asio::io_context io_context;
     boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 12345);
@@ -28,21 +27,23 @@ int main(int argc, char *argv[])
         std::cout << "Starting as Server" << std::endl;
         server = new Server(io_context, endpoint);
         server->start_accept();
+        AppManager *mediator = new AppManager(&qtApp, server);
     }
     else
     {
         std::cout << "Starting as Client" << std::endl;
         client = new Client(io_context, endpoint);
+        client->start_client();
+        AppManager *mediator = new AppManager(&qtApp, client);
     }
 
     // io_context.run();
 
-    AppManager *mediator = new AppManager(&qtApp, server);
     boost::asio::io_context::work work(io_context);
 
     std::thread io_thread([&io_context]()
                           { io_context.run(); });
-
+    qtApp.show();
     int result = app.exec(); // Enter the Qt event loop
 
     // Clean up

@@ -7,7 +7,7 @@ void write_handler(const boost::system::error_code &error,
 {
     if (!error)
     {
-        std::cout << "Data sent successfully" << std::endl;
+        // std::cout << "Data sent successfully" << std::endl;
     }
     else
     {
