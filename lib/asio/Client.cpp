@@ -42,7 +42,7 @@ void Client::read_callback(const boost::system::error_code &error, std::size_t l
     }
 }
 
-void Client::sendToClient(const std::string message)
+void Client::sendToServer(const std::string message)
 {
     std::strncpy(data_, message.c_str(), max_length_);
     std::cout << "Sending this message " <<data_;

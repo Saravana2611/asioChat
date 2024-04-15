@@ -23,12 +23,18 @@ QLineEdit *TextField::getQLineEdit()
     return inputField;
 }
 
+std::string TextField::getInputFieldInStr()
+{
+    return inputField->displayText().toStdString();
+}
+
+QString TextField::getInputFieldInQStr()
+{
+    return inputField->displayText();
+}
+
 QLabel *TextField::getQLabel()
 {
     return label;
 }
 
-std::string TextField::getInputFieldInStr()
-{
-    return inputField->displayText().toStdString();
-}

@@ -26,7 +26,7 @@ void AppManager::Notify(BaseComponent *sender, const std::string &event, std::st
         }
         else
         {
-            this->client_->sendToClient(message);
+            this->client_->sendToServer(message);
         }
     }
     if (event == "D")

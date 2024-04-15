@@ -18,5 +18,5 @@ public:
     void start_client();
     void handle_connection();
     void read_callback(const boost::system::error_code &error, std::size_t length);
-    void sendToClient(const std::string message);
+    void sendToServer(const std::string message);
 };

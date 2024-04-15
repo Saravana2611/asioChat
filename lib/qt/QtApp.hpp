@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QGridLayout>
 
+#include "TextArea.hpp"
 #include "TextField.hpp"
 #include "PushButton.hpp"
 #include "../BaseComponent.hpp"
@@ -14,6 +15,7 @@ class QtApp : public QWidget, public BaseComponent
     QGridLayout* grid;
     TextField* textField;
     Button* submitButton;
+    TextArea* textArea;
     std::vector<QWidget*> addedWidgetsList;
     std::vector<QMetaObject::Connection> connectionList;
 public:

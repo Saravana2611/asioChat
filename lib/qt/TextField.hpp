@@ -14,4 +14,5 @@ public:
     QLineEdit* getQLineEdit();
     QLabel* getQLabel();
     std::string getInputFieldInStr();
+    QString getInputFieldInQStr();
 };
