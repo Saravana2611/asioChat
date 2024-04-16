@@ -33,7 +33,7 @@ void Client::read_callback(const boost::system::error_code &error, std::size_t l
 {
     if (!error)
     {
-        std::cout << "Received data from client: " << data_ << std::endl;
+        this->mediator_->Notify(this, "B", data_);
         handle_connection();
     }
     else

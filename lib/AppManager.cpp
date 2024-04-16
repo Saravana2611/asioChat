@@ -29,10 +29,9 @@ void AppManager::Notify(BaseComponent *sender, const std::string &event, std::st
             this->client_->sendToServer(message);
         }
     }
-    if (event == "D")
+    if (event == "B")
     {
-        std::cout << "Mediator reacts on D and triggers following operations:\n";
-        // this->component1_->DoB();
-        // this->component2_->DoC();
+
+        this->qtApp_->appendMsgToTextArea(message);
     }
 }

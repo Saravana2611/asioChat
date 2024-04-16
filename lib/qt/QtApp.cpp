@@ -31,7 +31,7 @@ void QtApp::createPage(QGridLayout *grid)
     QMetaObject::Connection conn = QObject::connect(submitButton->getButton(), &QPushButton::clicked, [this, grid]()
                     { 
                         this->mediator_->Notify(this, "A", textField->getInputFieldInStr());
-                        textArea->getQTextEdit()->append(textField->getInputFieldInQStr());
+                        textArea->getQTextEdit()->append(textField->getInputFieldInQStr().prepend(QString("Person 1: ")));
                     });
     connectionList.push_back(conn);
 }
@@ -65,6 +65,11 @@ void QtApp::clearPage(QGridLayout *grid)
     for_each(this->connectionList.begin(), this->connectionList.end(), [](auto conn){
         QObject::disconnect(conn);
     });
+}
+
+void QtApp::appendMsgToTextArea(const std::string message)
+{
+    textArea->getQTextEdit()->append(QString::fromStdString(message));
 }
 
 QtApp::~QtApp()

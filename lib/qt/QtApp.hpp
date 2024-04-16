@@ -23,5 +23,6 @@ public:
     void createPage(QGridLayout *grid);
     void createPage2(QGridLayout *grid);
     void clearPage(QGridLayout *grid);
+    void appendMsgToTextArea(const std::string message);
     ~QtApp();
 };

@@ -21,13 +21,14 @@ int main(int argc, char *argv[])
 
     Server *server = nullptr;
     Client *client = nullptr;
+    AppManager *mediator = nullptr;
 
     if (!isServerRunning(io_context, endpoint))
     {
         std::cout << "Starting as Server" << std::endl;
         server = new Server(io_context, endpoint);
         server->start_accept();
-        AppManager *mediator = new AppManager(&qtApp, server);
+        mediator = new AppManager(&qtApp, server);
     }
     else
     {
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
 
     delete server;
     delete client;
+    delete mediator;
 
     return result;
 }
