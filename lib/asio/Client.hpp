@@ -5,7 +5,6 @@
 class Client : public BaseComponent
 {
     boost::asio::io_context &io_context_;
-    boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::socket socket_;
     boost::asio::ip::tcp::endpoint endpoint_;
     const std::size_t max_length_ = 1024;

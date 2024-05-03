@@ -5,7 +5,6 @@
 
 Client::Client(boost::asio::io_context &io_context,
                const boost::asio::ip::tcp::endpoint &endpoint) : io_context_(io_context), endpoint_(endpoint),
-                                                                 acceptor_(io_context, endpoint),
                                                                  socket_(io_context_)
 {
     std::cout << "CREATED Client\n";
