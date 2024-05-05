@@ -29,10 +29,9 @@ void QtApp::createPage(QGridLayout *grid)
     addedWidgetsList.push_back(submitButton->getButton());
 
     QMetaObject::Connection conn = QObject::connect(submitButton->getButton(), &QPushButton::clicked, [this, grid]()
-                    { 
+                                                    { 
                         this->mediator_->Notify(this, "A", textField->getInputFieldInStr());
-                        textArea->getQTextEdit()->append(textField->getInputFieldInQStr().prepend(QString("Person 1: ")));
-                    });
+                        textArea->getQTextEdit()->append(textField->getInputFieldInQStr().prepend(QString("You: "))); });
     connectionList.push_back(conn);
 }
 
@@ -51,25 +50,24 @@ void QtApp::createPage2(QGridLayout *grid)
     addedWidgetsList.push_back(submitButton->getButton());
 
     QMetaObject::Connection conn = QObject::connect(submitButton->getButton(), &QPushButton::clicked, [this, grid]()
-                     {  std::cout <<"HERE\n"; });
+                                                    { std::cout << "HERE\n"; });
 
     connectionList.push_back(conn);
 }
 
 void QtApp::clearPage(QGridLayout *grid)
 {
-    for_each(this->addedWidgetsList.begin(), this->addedWidgetsList.end(), [grid](auto widget){
+    for_each(this->addedWidgetsList.begin(), this->addedWidgetsList.end(), [grid](auto widget)
+             {
         grid->removeWidget(widget);
-        widget->setVisible(false);
-    });
-    for_each(this->connectionList.begin(), this->connectionList.end(), [](auto conn){
-        QObject::disconnect(conn);
-    });
+        widget->setVisible(false); });
+    for_each(this->connectionList.begin(), this->connectionList.end(), [](auto conn)
+             { QObject::disconnect(conn); });
 }
 
 void QtApp::appendMsgToTextArea(const std::string message)
 {
-    textArea->getQTextEdit()->append(QString::fromStdString(message));
+    textArea->getQTextEdit()->append(QString::fromStdString(message).prepend(QString("Other Person: ")));
 }
 
 QtApp::~QtApp()

@@ -3,7 +3,8 @@
 
 class Mediator; // Forward declaration
 
-class BaseComponent {
+class BaseComponent
+{
 protected:
     Mediator *mediator_;
 
@@ -12,7 +13,8 @@ public:
     BaseComponent(Mediator *mediator = nullptr) : mediator_(mediator) {}
 
     // Setter for mediator
-    void set_mediator(Mediator *mediator) {
+    void set_mediator(Mediator *mediator)
+    {
         this->mediator_ = mediator;
     }
 };

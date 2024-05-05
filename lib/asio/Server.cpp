@@ -23,7 +23,6 @@ void Server::accept_handler(const boost::system::error_code &error)
     }
     else if (error == boost::asio::error::already_open)
     {
-
     }
     else
     {

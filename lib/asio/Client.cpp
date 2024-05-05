@@ -37,18 +37,18 @@ void Client::read_callback(const boost::system::error_code &error, std::size_t l
     }
     else
     {
-        std::cout << "Error during async_read"  << error.message() << std::endl;
+        std::cout << "Error during async_read" << error.message() << std::endl;
     }
 }
 
 void Client::sendToServer(const std::string message)
 {
     std::strncpy(data_, message.c_str(), max_length_);
-    std::cout << "Sending this message " <<data_;
+    std::cout << "Sending this message " << data_;
     boost::asio::write(socket_, boost::asio::buffer(data_, max_length_));
 }
 
 Client::~Client()
 {
-    std::cout<<"Client destroyed\n";
+    std::cout << "Client destroyed\n";
 }
