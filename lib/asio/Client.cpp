@@ -32,7 +32,7 @@ void Client::read_callback(const boost::system::error_code &error, std::size_t l
 {
     if (!error)
     {
-        this->mediator_->Notify(this, "B", data_);
+        this->mediator_->Notify(this, "SEND_TO_UI", data_);
         handle_connection();
     }
     else
@@ -45,7 +45,8 @@ void Client::sendToServer(const std::string message)
 {
     std::strncpy(data_, message.c_str(), max_length_);
     std::cout << "Sending this message " << data_;
-    boost::asio::write(socket_, boost::asio::buffer(data_, max_length_));
+    auto bytesWritten = boost::asio::write(socket_, boost::asio::buffer(data_, max_length_));
+    std::cout << "Bytes written = " << bytesWritten << std::endl;
 }
 
 Client::~Client()

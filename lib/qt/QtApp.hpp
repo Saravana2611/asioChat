@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QGridLayout>
 
+#include "DropDown.hpp"
 #include "TextArea.hpp"
 #include "TextField.hpp"
 #include "PushButton.hpp"
@@ -21,8 +22,7 @@ class QtApp : public QWidget, public BaseComponent
 public:
     QtApp(QWidget *parent = nullptr);
     void createPage(QGridLayout *grid);
-    void createPage2(QGridLayout *grid);
-    void clearPage(QGridLayout *grid);
+    void createMainPage(QGridLayout *grid);
     void appendMsgToTextArea(const std::string message);
     ~QtApp();
 };

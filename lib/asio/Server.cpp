@@ -10,11 +10,14 @@ Server::Server(boost::asio::io_context &io_context,
 void Server::start_accept() // New connection
 {
     std::cout << "Waiting for new connection\n";
+    // only for the first connection. After that, the socket is already associated with the accepted connection,
+    // which leads to error boost::asio::error::already_open
     acceptor_.async_accept(socket_, std::bind(&Server::accept_handler, this, std::placeholders::_1));
 }
 
 void Server::accept_handler(const boost::system::error_code &error)
 {
+    std::cout << "Inside accept_handler\n";
     if (!error)
     {
         std::cout << "Connection Succeeded\n";
@@ -23,6 +26,7 @@ void Server::accept_handler(const boost::system::error_code &error)
     }
     else if (error == boost::asio::error::already_open)
     {
+        std::cout << "ERROR: " << error.message();
     }
     else
     {
@@ -37,24 +41,13 @@ void Server::handle_connection()
 
 void Server::read_callback(const boost::system::error_code &error, std::size_t length)
 {
-    if (!error)
+    if (not error)
     {
         if (length > 0)
         {
-            std::cout << "Received data from client: " << std::string(data_, length) << std::endl;
-            if (std::string(data_) == "Server is running")
-            {
-                std::cout << "closing socket\n";
-                strcpy(data_, "");
-                socket_.close();
-                start_accept();
-            }
-            else
-            {
-                this->mediator_->Notify(this, "B", data_);
-                strcpy(data_, "");
-                Server::handle_connection();
-            }
+            this->mediator_->Notify(this, "SEND_TO_UI", data_);
+            strcpy(data_, "");
+            Server::handle_connection();
         }
         else
         {

@@ -17,7 +17,7 @@ AppManager::AppManager(QtApp *c1, Client *c2) : qtApp_(c1), client_(c2)
 
 void AppManager::Notify(BaseComponent *sender, const std::string &event, std::string message) const
 {
-    if (event == "A")
+    if (event == "SEND_TO_HOST")
     {
         std::cout << "Mediator reacts on A and triggers following operations: " << message << std::endl;
         if (isServer_)
@@ -29,9 +29,8 @@ void AppManager::Notify(BaseComponent *sender, const std::string &event, std::st
             this->client_->sendToServer(message);
         }
     }
-    if (event == "B")
+    if (event == "SEND_TO_UI")
     {
-
         this->qtApp_->appendMsgToTextArea(message);
     }
 }

@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     Client *client = nullptr;
     AppManager *mediator = nullptr;
 
-    if (!isServerRunning(io_context, endpoint))
+    if (strcmp(argv[1], "server") == 0)
     {
         std::cout << "Starting as Server" << std::endl;
         server = new Server(io_context, endpoint);
@@ -35,10 +35,8 @@ int main(int argc, char *argv[])
         std::cout << "Starting as Client" << std::endl;
         client = new Client(io_context, endpoint);
         client->start_client();
-        AppManager *mediator = new AppManager(&qtApp, client);
+        mediator = new AppManager(&qtApp, client);
     }
-
-    // io_context.run();
 
     boost::asio::io_context::work work(io_context);
 
