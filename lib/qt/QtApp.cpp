@@ -1,73 +1,136 @@
 #include <QtApp.hpp>
 
 #include <iostream>
+#include <QVBoxLayout>
+
+#include "../Messages.hpp"
 
 QtApp::QtApp(QWidget *parent) : QWidget(parent)
 {
-    QGridLayout *grid = new QGridLayout(this);
-    createMainPage(grid);
-    resize(500, 500);
     setWindowTitle("AsioChat");
+
+    resize(800, 600);
+    stack = new QStackedWidget(this);
+
+    mainPage = createMainPage();
+    chatPage = createChatPage();
+
+    stack->addWidget(mainPage);
+    stack->addWidget(chatPage);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(stack);
 }
 
-const std::vector<std::string> connectionTypes
-{
+//  TODO: Change to enum Class
+const std::vector<std::string> connectionTypes{
     "tcp",
     "udp",
-    "tcp with tls"
-};
+    "tcp with tls"};
 
-void QtApp::createMainPage(QGridLayout *grid)
+QWidget *QtApp::createMainPage()
 {
-    grid->setColumnStretch(0, 1);
-    grid->setColumnStretch(4, 1);
+    QWidget *page = new QWidget();
 
-    grid->setRowStretch(0, 1);
-    grid->setRowStretch(3, 1);
+    QVBoxLayout *VLayout = new QVBoxLayout(page);
+    VLayout->addStretch();
 
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->setSpacing(10);
+
+    layout->addStretch();
     auto dropDown = new DropDown(connectionTypes);
-    grid->addWidget(dropDown->getDropDown(), 1, 1, 1, 2, Qt::AlignCenter);
+    layout->addWidget(dropDown->getDropDown());
 
     auto simulateButton = new Button("Simulate");
-    grid->addWidget(simulateButton->getButton(), 1, 3, Qt::AlignCenter);
+    layout->addWidget(simulateButton->getButton());
 
-    QObject::connect(simulateButton->getButton(), &QPushButton::clicked, [dropDown](){
+    layout->addStretch();
+    QObject::connect(simulateButton->getButton(), &QPushButton::clicked, [dropDown, this]()
+                     {
+        Message message(Message::PROTOCOL_SELECTED, dropDown->getSelectedOption());
+        this->mediator_->Notify(this, message);
         std::cout << "Simulation started for " << dropDown->getSelectedOption() << std::endl;
-    });
+
+        // TODO: Change page after receiving response from server/client that connection is established instead of changing page immediately after clicking the button
+        stack->setCurrentWidget(chatPage); });
+
+    VLayout->addLayout(layout);
+    VLayout->addStretch();
+
+    return page;
 }
 
-void QtApp::createPage(QGridLayout *grid)
+QWidget *QtApp::createChatPage()
 {
+    QWidget *page = new QWidget();
+
+    QHBoxLayout *layout = new QHBoxLayout(page);
+
+    QVBoxLayout *chatLayout = new QVBoxLayout();
+
+    textArea = new TextArea();
+    chatLayout->addWidget(textArea->getQTextEdit());
+
+    QHBoxLayout *msgBox = new QHBoxLayout();
+
     textField = new TextField("Input Field:");
     submitButton = new Button("Submit");
-    textArea = new TextArea();
+    msgBox->addWidget(textField->getQLabel());
+    msgBox->addWidget(textField->getQLineEdit());
+    msgBox->addWidget(submitButton->getButton());
 
-    grid->addWidget(textArea->getQTextEdit(), 0, 0, 1, 2);
-    addedWidgetsList.push_back(textArea->getQTextEdit());
+    chatLayout->addLayout(msgBox);
 
-    grid->addWidget(textField->getQLabel(), 1, 0);
-    addedWidgetsList.push_back(textField->getQLabel());
+    QObject::connect(submitButton->getButton(), &QPushButton::clicked, [this]()
+                     { 
+                    Message message(Message::FROM_SERVER_UI_TO_SERVER, textField->getInputFieldInStr());
+                    this->mediator_->Notify(this, message);
+                    textArea->getQTextEdit()->append(textField->getInputFieldInQStr().prepend(QString("You: "))); });
 
-    grid->addWidget(textField->getQLineEdit(), 1, 1);
-    addedWidgetsList.push_back(textField->getQLineEdit());
+    QVBoxLayout *chatLayout2 = new QVBoxLayout();
 
-    grid->addWidget(submitButton->getButton(), 2, 1, Qt::AlignRight);
-    addedWidgetsList.push_back(submitButton->getButton());
+    textArea2 = new TextArea();
+    chatLayout2->addWidget(textArea2->getQTextEdit());
 
-    QMetaObject::Connection conn = QObject::connect(submitButton->getButton(), &QPushButton::clicked, [this, grid]()
-                                                    { 
-                        this->mediator_->Notify(this, "SEND_TO_HOST", textField->getInputFieldInStr());
-                        textArea->getQTextEdit()->append(textField->getInputFieldInQStr().prepend(QString("You: "))); });
-    connectionList.push_back(conn);
+    QHBoxLayout *msgBox2 = new QHBoxLayout();
+
+    textField2 = new TextField("Input Field:");
+    submitButton2 = new Button("Submit");
+    msgBox2->addWidget(textField2->getQLabel());
+    msgBox2->addWidget(textField2->getQLineEdit());
+    msgBox2->addWidget(submitButton2->getButton());
+
+    chatLayout2->addLayout(msgBox2);
+
+    QObject::connect(submitButton2->getButton(), &QPushButton::clicked, [this]()
+                     { 
+                        Message message(Message::FROM_CLIENT_UI_TO_CLIENT, textField2->getInputFieldInStr());
+                        this->mediator_->Notify(this, message);
+                        textArea2->getQTextEdit()->append(textField2->getInputFieldInQStr().prepend(QString("You: "))); });
+
+    layout->addLayout(chatLayout);
+    layout->addLayout(chatLayout2);
+
+    return page;
+}
+
+void QtApp::appendMsgToTextArea2(const std::string message)
+{
+    textArea2->getQTextEdit()->append(QString::fromStdString(message).prepend(QString("Server: ")));
 }
 
 void QtApp::appendMsgToTextArea(const std::string message)
 {
-    textArea->getQTextEdit()->append(QString::fromStdString(message).prepend(QString("Other Person: ")));
+    textArea->getQTextEdit()->append(QString::fromStdString(message).prepend(QString("Client: ")));
 }
 
 QtApp::~QtApp()
 {
     delete textField;
     delete submitButton;
+    delete textArea;
+    delete textField2;
+    delete submitButton2;
+    delete textArea2;
 }

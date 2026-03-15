@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QStackedWidget>
 #include <QGridLayout>
 
 #include "DropDown.hpp"
@@ -13,16 +14,24 @@ class QtApp;
 
 class QtApp : public QWidget, public BaseComponent
 {
+    QStackedWidget* stack;
+
     QGridLayout* grid;
     TextField* textField;
     Button* submitButton;
     TextArea* textArea;
-    std::vector<QWidget*> addedWidgetsList;
-    std::vector<QMetaObject::Connection> connectionList;
+
+    TextField* textField2;
+    Button* submitButton2;
+    TextArea* textArea2;
+
+    QWidget* mainPage;
+    QWidget* chatPage;
 public:
     QtApp(QWidget *parent = nullptr);
-    void createPage(QGridLayout *grid);
-    void createMainPage(QGridLayout *grid);
+    QWidget* createChatPage();
+    QWidget* createMainPage();
     void appendMsgToTextArea(const std::string message);
+    void appendMsgToTextArea2(const std::string message);
     ~QtApp();
 };

@@ -2,19 +2,16 @@
 
 #include "mediator.hpp"
 #include "qt/QtApp.hpp"
-#include "asio/Server.hpp"
-#include "asio/Client.hpp"
+#include "asio/NetworkManager.hpp"
+#include "Messages.hpp"
 
 class AppManager : public Mediator
 {
 private:
-    QtApp *qtApp_;
-    Server *server_ = nullptr;
-    Client *client_ = nullptr;
-    bool isServer_;
+    QtApp *qtApp_ = nullptr;
+    NetworkManager *networkManager_ = nullptr;    
 
 public:
-    AppManager(QtApp *c1, Server *c2);
-    AppManager(QtApp *c1, Client *c2);
-    void Notify(BaseComponent *sender, const std::string &event, std::string message) const override;
+    AppManager(QtApp *c1, NetworkManager *c2);
+    void Notify(BaseComponent *sender, const Message& message) const override;
 };

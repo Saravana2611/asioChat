@@ -1,57 +1,46 @@
 #include <iostream>
+#include <thread>
 
 #include <QApplication>
 
 #include "AppManager.hpp"
 #include "qt/QtApp.hpp"
-#include "asio/utils.hpp"
-#include "asio/Server.hpp"
-#include "asio/Client.hpp"
-
-using namespace std;
+#include "asio/NetworkManager.hpp"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv); // Create the Qt application object
+    QApplication app(argc, argv);
 
+    // Qt UI
     QtApp qtApp;
 
+    // Asio context
     boost::asio::io_context io_context;
-    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 12345);
 
-    Server *server = nullptr;
-    Client *client = nullptr;
-    AppManager *mediator = nullptr;
+    // Keep io_context alive
+    boost::asio::executor_work_guard<
+        boost::asio::io_context::executor_type> work =
+        boost::asio::make_work_guard(io_context);
 
-    if (strcmp(argv[1], "server") == 0)
+    // Networking layer
+    NetworkManager networkManager(io_context);
+
+    // Mediator
+    AppManager mediator(&qtApp, &networkManager);
+
+    // Run Asio in separate thread
+    std::thread io_thread([&]()
     {
-        std::cout << "Starting as Server" << std::endl;
-        server = new Server(io_context, endpoint);
-        server->start_accept();
-        mediator = new AppManager(&qtApp, server);
-    }
-    else
-    {
-        std::cout << "Starting as Client" << std::endl;
-        client = new Client(io_context, endpoint);
-        client->start_client();
-        mediator = new AppManager(&qtApp, client);
-    }
+        io_context.run();
+    });
 
-    boost::asio::io_context::work work(io_context);
-
-    std::thread io_thread([&io_context]()
-                          { io_context.run(); });
     qtApp.show();
-    int result = app.exec(); // Enter the Qt event loop
 
-    // Clean up
+    int result = app.exec();   // Qt event loop
+
+    // Shutdown
     io_context.stop();
     io_thread.join();
-
-    delete server;
-    delete client;
-    delete mediator;
 
     return result;
 }

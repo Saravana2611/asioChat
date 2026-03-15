@@ -1,36 +1,37 @@
 #include "AppManager.hpp"
 #include <iostream>
 
-AppManager::AppManager(QtApp *c1, Server *c2) : qtApp_(c1), server_(c2)
+AppManager::AppManager(QtApp *qtApp, NetworkManager *NetworkManager) : qtApp_(qtApp), networkManager_(NetworkManager)
 {
     this->qtApp_->set_mediator(this);
-    this->server_->set_mediator(this);
-    isServer_ = true;
+    this->networkManager_->set_mediator(this);
 }
 
-AppManager::AppManager(QtApp *c1, Client *c2) : qtApp_(c1), client_(c2)
+void AppManager::Notify(BaseComponent *sender, const Message& message) const
 {
-    this->qtApp_->set_mediator(this);
-    this->client_->set_mediator(this);
-    isServer_ = false;
-}
-
-void AppManager::Notify(BaseComponent *sender, const std::string &event, std::string message) const
-{
-    if (event == "SEND_TO_HOST")
+    if (message.eventType == Message::PROTOCOL_SELECTED)
     {
-        std::cout << "Mediator reacts on A and triggers following operations: " << message << std::endl;
-        if (isServer_)
-        {
-            this->server_->sendToClient(message);
-        }
-        else
-        {
-            this->client_->sendToServer(message);
-        }
+        std::cout << "Protocol selected: " << message.data << std::endl;
+        networkManager_->startConnection(message.data);
     }
-    if (event == "SEND_TO_UI")
+    else if (message.eventType == Message::FROM_SERVER_UI_TO_SERVER)
     {
-        this->qtApp_->appendMsgToTextArea(message);
+        std::cout << "FROM_SERVER_UI_TO_SERVER with msg: " << message.data << std::endl;
+        networkManager_->sendMessage(message);
+    }
+    else if (message.eventType == Message::FROM_CLIENT_UI_TO_CLIENT)
+    {
+        std::cout << "FROM_CLIENT_UI_TO_CLIENT with msg: " << message.data << std::endl;
+        networkManager_->sendMessage(message);
+    }
+    else if (message.eventType == Message::FROM_SERVER_TO_SERVER_UI)
+    {
+        std::cout << "FROM_SERVER_TO_SERVER_UI with msg: " << message.data << std::endl;
+        this->qtApp_->appendMsgToTextArea(message.data);
+    }
+    else if (message.eventType == Message::FROM_CLIENT_TO_CLIENT_UI)
+    {
+        std::cout << "FROM_CLIENT_TO_CLIENT_UI with msg: " << message.data << std::endl;
+        this->qtApp_->appendMsgToTextArea2(message.data);
     }
 }

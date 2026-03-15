@@ -1,4 +1,5 @@
 #include <TextField.hpp>
+#include <QHBoxLayout>
 
 TextField::TextField(QWidget *parent)
     : QWidget(parent)
@@ -7,6 +8,10 @@ TextField::TextField(QWidget *parent)
     label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     inputField = new QLineEdit(this);
+
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->addWidget(label);
+    layout->addWidget(inputField);
 }
 
 TextField::TextField(std::string labelStr, QWidget *parent)
@@ -16,6 +21,10 @@ TextField::TextField(std::string labelStr, QWidget *parent)
     label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     inputField = new QLineEdit(this);
+
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->addWidget(label);
+    layout->addWidget(inputField);
 }
 
 QLineEdit *TextField::getQLineEdit()

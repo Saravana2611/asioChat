@@ -7,10 +7,10 @@ Server::Server(boost::asio::io_context &io_context,
 {
 }
 
-void Server::start_accept() // New connection
+void Server::start_accept()
 {
     std::cout << "Waiting for new connection\n";
-    // only for the first connection. After that, the socket is already associated with the accepted connection,
+    // TODO: only for the first connection. After that, the socket is already associated with the accepted connection,
     // which leads to error boost::asio::error::already_open
     acceptor_.async_accept(socket_, std::bind(&Server::accept_handler, this, std::placeholders::_1));
 }
@@ -22,7 +22,8 @@ void Server::accept_handler(const boost::system::error_code &error)
     {
         std::cout << "Connection Succeeded\n";
         handle_connection();
-        start_accept(); // recursively wait for new connection
+        // TODO: use when supporting Multiple Clients
+        // start_accept();  // recursively wait for new connection
     }
     else if (error == boost::asio::error::already_open)
     {
