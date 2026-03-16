@@ -1,33 +1,34 @@
 #include <NetworkManager.hpp>
 #include <TcpConnection.hpp>
+#include <UdpConnection.hpp>
 
-NetworkManager::NetworkManager(boost::asio::io_context& io_context) : io_context_(io_context)
+NetworkManager::NetworkManager(boost::asio::io_context &io_context) : io_context_(io_context)
 {
 }
 
-void NetworkManager::startConnection(const std::string& protocol)
+void NetworkManager::startConnection(const std::string &protocol)
 {
-    if(protocol == "tcp")
+    if (protocol == "tcp")
     {
         // start tcp server
-        connection_ = std::make_unique<TcpConnection>(io_context_, [this](const Message& message)
-        {
-            this->mediator_->Notify(this, message);
-        });
+        connection_ = std::make_unique<TcpConnection>(io_context_, [this](const Message &message)
+                                                      { this->mediator_->Notify(this, message); });
     }
-    else if(protocol == "udp")
+    else if (protocol == "udp")
     {
         // start udp server
+        connection_ = std::make_unique<UdpConnection>(io_context_, [this](const Message &message)
+                                                      { this->mediator_->Notify(this, message); });
     }
-    else if(protocol == "tcp with tls")
+    else if (protocol == "tcp with tls")
     {
         // start tcp with tls server
     }
 }
 
-void NetworkManager::sendMessage(const Message& message)
+void NetworkManager::sendMessage(const Message &message)
 {
-    if(connection_)
+    if (connection_)
     {
         if (message.eventType == Message::FROM_SERVER_UI_TO_SERVER)
         {
@@ -39,4 +40,3 @@ void NetworkManager::sendMessage(const Message& message)
         }
     }
 }
-
