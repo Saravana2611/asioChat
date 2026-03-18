@@ -119,14 +119,7 @@ void TcpConnection::clientReadCallback(const boost::system::error_code &error, s
 
 void TcpConnection::sendFromClientUI(const std::string &msg)
 {
-    const size_t fragmentSize = 3;
-    for (size_t i = 0; i < msg.size(); i += fragmentSize)
-    {
-        std::string fragment = msg.substr(i, fragmentSize);
-        boost::asio::write(clientSocket_, boost::asio::buffer(fragment));
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
+    boost::asio::write(clientSocket_, boost::asio::buffer(msg));
 }
 
 void TcpConnection::sendFromServerUI(const std::string &msg)

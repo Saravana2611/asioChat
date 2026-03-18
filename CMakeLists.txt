@@ -10,6 +10,7 @@ set(CMAKE_CXX_DEBUGGER gdb)
 project(MAIN)
 
 find_package(Qt5 COMPONENTS Widgets Core REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SRC_PATH}/main.cpp)
 add_subdirectory(lib)
