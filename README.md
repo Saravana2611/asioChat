@@ -68,7 +68,9 @@ This project implements a TCP server-client communication system with a Qt-based
     ./run.sh (Run another instance to create client)
 
 ## User Interface Screenshots
-![Screenshot from 2024-05-05 14-01-49](https://github.com/Saravana2611/asioChat/assets/76907286/5164801f-0645-4eb5-8e86-20cc1dfe8e25)
+<img width="792" height="632" alt="image" src="https://github.com/user-attachments/assets/12710e9c-f4b7-4f10-a48f-09fbf3b960a7" />
+
+<img width="794" height="631" alt="image" src="https://github.com/user-attachments/assets/54769f33-b31e-4014-a260-da237a4c6531" />
 
 ## Dependencies
 
